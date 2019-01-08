@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
+import Book from './Book';
 
 class SearchBooks extends Component {
   state = {
-    query: ''
+    books:[]
   };
 
   handleSearchInputChange = (event) => {
-    this.setState({query: event.target.value});
     if (event.target.value !== '') {
       BooksAPI.search(event.target.value).then((books) => {
+        if (Array.isArray(books)) {
+          this.setState({books: books});
+        } else {
+          this.setState({books: []});
+        }
         console.log(books);
       });
     }
@@ -36,8 +41,17 @@ class SearchBooks extends Component {
           </div>
         </div>
         <div className='search-books-results'>
-          <ol className='books-grid'></ol>
-          {this.state.query}
+          <ol className='books-grid'>
+            {this.state.books.map((book) => {
+              const bk = this.props.booksInShelf.find(b => b.id === book.id);
+              return (
+                <Book
+                  key={book.id}
+                  book={bk ? bk : book}
+                />
+              );
+            })}
+          </ol>
         </div>
       </div>
     );
