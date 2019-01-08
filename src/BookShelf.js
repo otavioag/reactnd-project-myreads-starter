@@ -7,12 +7,11 @@ const BookShelf = (props) => (
     <div className='bookshelf-books'>
       <ol className='books-grid'>
         {props.books.filter(book => book.shelf === props.shelf).map(book => (
-          <li>
-            <Book
-              key={book.id}
-              book={book}
-            />
-          </li>
+          <Book
+            key={book.id}
+            book={book}
+            handleShelfChange={props.handleShelfChange}
+          />
         ))}
       </ol>
     </div>

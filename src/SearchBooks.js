@@ -16,7 +16,6 @@ class SearchBooks extends Component {
         } else {
           this.setState({books: []});
         }
-        console.log(books);
       });
     }
   };
@@ -48,6 +47,7 @@ class SearchBooks extends Component {
                 <Book
                   key={book.id}
                   book={bk ? bk : book}
+                  handleShelfChange={this.props.handleShelfChange}
                 />
               );
             })}
