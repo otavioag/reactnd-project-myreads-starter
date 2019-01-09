@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const BookMenu = (props) => (
   <div className='book-shelf-changer'>
@@ -14,5 +15,11 @@ const BookMenu = (props) => (
     </select>
   </div>
 );
+
+BookMenu.propTypes = {
+  book: PropTypes.object.isRequired,
+  shelf: PropTypes.string.isRequired,
+  handleShelfChange: PropTypes.func.isRequired
+};
 
 export default BookMenu;
