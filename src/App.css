@@ -1,4 +1,4 @@
-html, body, .root {
+html, body, #root {
   height: 100%;
 }
 
@@ -8,6 +8,7 @@ body {
 
 body, .app {
   background: white;
+  height: 100%;
 }
 
 /* main page */
@@ -103,7 +104,7 @@ body, .app {
   top: 20px;
   left: 15px;
   width: 50px;
-  height: 53px;
+  height: 100%;
   background-image: url('./icons/arrow-back.svg');
   background-position: center;
   background-repeat: no-repeat;
@@ -195,4 +196,25 @@ button:active {
   padding: 20px 10px 0;
   text-align: center;
   font-size: 0.8em;
+}
+
+.ant-spin-nested-loading {
+  height: 100%;
+}
+
+.ant-spin-container {
+  height: 100%;
+}
+
+.ant-spin-spinning {
+  position: fixed !important;
+  top: calc(50% - 200px);
+}
+
+.ant-spin {
+  color: green;
+}
+
+.ant-spin-dot i {
+  background-color: green;
 }
