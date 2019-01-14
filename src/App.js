@@ -41,7 +41,7 @@ class BooksApp extends React.Component {
               sh = 'Read';
               break;
           }
-          notification.open({message: book.title + ' moved to ' + sh});
+          notification.open({message: book.title + ' moved to ' + sh, style: {top: 55}});
         }
       });
     });
