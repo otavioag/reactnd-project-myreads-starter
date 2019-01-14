@@ -1,8 +1,8 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
-import { Spin, notification } from 'antd';
-import SearchBooks from './SearchBooks';
-import BookShelf from './BookShelf';
+import { Route } from 'react-router-dom';
+import { notification } from 'antd';
+import SearchPage from './components/SearchPage';
+import LibraryPage from './components/LibraryPage';
 import * as BooksAPI from './BooksAPI'
 import 'antd/dist/antd.css';
 import './App.css';
@@ -26,25 +26,31 @@ class BooksApp extends React.Component {
           books[index].shelf = shelf;
         }
         this.setState((curState) => ({...curState, loading:false, booksInShelf: books}));
-        if (shelf === 'none') {
-          notification.open({message: book.title + ' removed from library' });
-        } else {
-          let sh;
-          switch (shelf) {
-            case 'currentlyReading':
-              sh = 'Currently Reading';
-              break;
-            case 'wantToRead':
-              sh = 'Want to Read';
-              break;
-            case 'read':
-              sh = 'Read';
-              break;
-          }
-          notification.open({message: book.title + ' moved to ' + sh, style: {top: 55}});
-        }
+        this.showNotification(book.title, shelf);
       });
     });
+  };
+
+  showNotification = (title, shelf) => {
+    if (shelf === 'none') {
+      notification.open({message: title + ' removed from library', style: {top: 55}});
+    } else {
+      let sh;
+      switch (shelf) {
+        case 'currentlyReading':
+          sh = 'Currently Reading';
+          break;
+        case 'wantToRead':
+          sh = 'Want to Read';
+          break;
+        case 'read':
+          sh = 'Read';
+          break;
+        default:
+          break;
+      }
+      notification.open({message: title + ' moved to ' + sh, style: {top: 55}});
+    }
   };
 
   componentDidMount() {
@@ -57,46 +63,18 @@ class BooksApp extends React.Component {
     return (
       <div className='app'>
         <Route path='/search' render={() => (
-          <SearchBooks
+          <SearchPage
             booksInShelf={this.state.booksInShelf}
             handleShelfChange={this.handleShelfChange}
             loading={this.state.loading}
           />
         )} />
         <Route exact path='/' render={() => (
-          <div className='list-books'>
-            <div className='list-books-title'>
-              <h1>MyReads</h1>
-            </div>
-            <Spin spinning={this.state.loading} size='large' tip='Loading...' >
-              <div className='list-books-content'>
-                <BookShelf
-                  title='Currently Reading'
-                  shelf='currentlyReading'
-                  books={this.state.booksInShelf}
-                  handleShelfChange={this.handleShelfChange}
-                />
-                <BookShelf
-                  title='Want to Read'
-                  shelf='wantToRead'
-                  books={this.state.booksInShelf}
-                  handleShelfChange={this.handleShelfChange}
-                />
-                <BookShelf
-                  title='Read'
-                  shelf='read'
-                  books={this.state.booksInShelf}
-                  handleShelfChange={this.handleShelfChange}
-                />
-              </div>
-            </Spin>
-            <div className='open-search'>
-              <Link to='/search'
-                className='search-book' >
-                <button>Add a book</button>
-              </Link>
-            </div>
-          </div>
+          <LibraryPage 
+            booksInShelf={this.state.booksInShelf}
+            handleShelfChange={this.handleShelfChange}
+            loading={this.state.loading}
+          />
         )} />
       </div>
     );

@@ -14,7 +14,11 @@ const Book = (props) => (
             backgroundImage: 'url('+(props.book.imageLinks ? props.book.imageLinks.thumbnail : '')+')'
           }}
         />
-        <BookMenu book={props.book} shelf={props.book.shelf ? props.book.shelf : 'none'} handleShelfChange={props.handleShelfChange} />
+        <BookMenu
+          book={props.book}
+          shelf={props.book.shelf ? props.book.shelf : 'none'}
+          handleShelfChange={props.handleShelfChange}
+        />
       </div>
       <div className='book-title'>{props.book.title}</div>
       {props.book.authors ? props.book.authors.map(author => (

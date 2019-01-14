@@ -2,26 +2,30 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Spin } from 'antd';
 import PropTypes from 'prop-types';
-import * as BooksAPI from './BooksAPI';
-import Book from './Book';
+import * as BooksAPI from '../BooksAPI';
+import Book from './book/Book';
 
-class SearchBooks extends Component {
+class SearchPage extends Component {
   state = {
     query: '',
     books:[],
-    loading: false
+    searching: false
   };
 
   handleSearchInputChange = (event) => {
     const q = event.target.value;
-    //this callback aproach solves setState race problems
-    this.setState((curState) => ({...curState, loading: true, query: q, books: []}), () => {
+    //this callback aproach solves setState race problems:
+    //  example:
+    //  user types 'a' but before the results for 'a' are shown the user deletes the 'a'
+    //  leaving the search field empty, which will update and show zero books, then 
+    //  because it takes more time, the result for 'a' is displayed even with an empty search field.
+    this.setState((curState) => ({...curState, searching: true, query: q, books: []}), () => {
       if (q !== '') {
         BooksAPI.search(q).then((books) => {
           if (Array.isArray(books)) {
             this.setState((curState) => {
               if (curState.query === q) {
-                return {...curState, loading: false, books: books};
+                return {...curState, searching: false, books: books};
               } else {
                 return curState;
               }
@@ -29,7 +33,7 @@ class SearchBooks extends Component {
           } else {
             this.setState((curState) => {
               if (curState.query === q) {
-                return {...curState, loading: false, books: []};
+                return {...curState, searching: false, books: []};
               } else {
                 return curState;
               }
@@ -39,7 +43,7 @@ class SearchBooks extends Component {
       } else {
         this.setState((curState) => {
           if (curState.query === q) {
-            return {...curState, loading: false, books: []};
+            return {...curState, searching: false, books: []};
           } else {
             return curState;
           }
@@ -50,7 +54,11 @@ class SearchBooks extends Component {
 
   render() {
     return (
-      <Spin spinning={this.state.loading || this.props.loading} size='large' tip='Loading...' >
+      <Spin
+        spinning={this.state.searching || this.props.loading}
+        size='large'
+        tip={this.state.searching ? 'Searching...' : 'Loading...'}
+      >
         <div className='search-books'>
           <div className='search-books-bar'>
             <Link to='/'>
@@ -82,16 +90,16 @@ class SearchBooks extends Component {
               })}
             </ol>
           </div>
-          {/* {this.state.loading ? <Spin size='large' tip='Searching...' /> : ''} */}
         </div>
       </Spin>
     );
   }
 }
 
-SearchBooks.propTypes = {
+SearchPage.propTypes = {
   booksInShelf: PropTypes.array.isRequired,
-  handleShelfChange: PropTypes.func.isRequired
+  handleShelfChange: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
-export default SearchBooks;
+export default SearchPage;
