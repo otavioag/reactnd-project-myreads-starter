@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
-import { Spin } from 'antd';
+import { Spin, notification } from 'antd';
 import SearchBooks from './SearchBooks';
 import BookShelf from './BookShelf';
 import * as BooksAPI from './BooksAPI'
@@ -26,6 +26,23 @@ class BooksApp extends React.Component {
           books[index].shelf = shelf;
         }
         this.setState((curState) => ({...curState, loading:false, booksInShelf: books}));
+        if (shelf === 'none') {
+          notification.open({message: book.title + ' removed from library' });
+        } else {
+          let sh;
+          switch (shelf) {
+            case 'currentlyReading':
+              sh = 'Currently Reading';
+              break;
+            case 'wantToRead':
+              sh = 'Want to Read';
+              break;
+            case 'read':
+              sh = 'Read';
+              break;
+          }
+          notification.open({message: book.title + ' moved to ' + sh});
+        }
       });
     });
   };
@@ -51,7 +68,7 @@ class BooksApp extends React.Component {
             <div className='list-books-title'>
               <h1>MyReads</h1>
             </div>
-            <Spin spinning={this.state.loading || false} size='large' tip='Loading...' >
+            <Spin spinning={this.state.loading} size='large' tip='Loading...' >
               <div className='list-books-content'>
                 <BookShelf
                   title='Currently Reading'
