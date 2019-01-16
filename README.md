@@ -13,7 +13,7 @@ This project was developed for Udacity's React Developer Nanodegree Program, bas
 
 The MyReads application is composed of 2 pages, a LibraryPage `/` and a SearchPage `/search`.
 
-###LibraryPage
+### LibraryPage
 
 In the LibraryPage there are 3 shelfs, with zero or more books in each.
 
@@ -23,16 +23,16 @@ In the LibraryPage there are 3 shelfs, with zero or more books in each.
 
 It's also possible to go to the SearchPage by clicking on the lower right + button.
 
-###SearchPage
+### SearchPage
 
 In the SearchPage, there's a search field, that calls the provided API and retrieves the books, that appears under the search field.
 There is a button to go back to the LibraryPage on the left of the search field.
 
-###Book
+### Book
 
 Each book (in any page) has a button that opens a dropdown menu, showing the current shelf, where it's possible to change the shelf of a book, or remove the book from shelf (none).
 
-###Extras
+### Extras
 
 * Uses Ant Design
 * Loading spinners while searching and changing a book shelf
