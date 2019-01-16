@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { notification } from 'antd';
 import SearchPage from './components/SearchPage';
 import LibraryPage from './components/LibraryPage';
@@ -61,22 +61,24 @@ class BooksApp extends React.Component {
 
   render() {
     return (
-      <div className='app'>
-        <Route path='/search' render={() => (
-          <SearchPage
-            booksInShelf={this.state.booksInShelf}
-            handleShelfChange={this.handleShelfChange}
-            loading={this.state.loading}
-          />
-        )} />
-        <Route exact path='/' render={() => (
-          <LibraryPage 
-            booksInShelf={this.state.booksInShelf}
-            handleShelfChange={this.handleShelfChange}
-            loading={this.state.loading}
-          />
-        )} />
-      </div>
+      <BrowserRouter>
+        <div className='app'>
+          <Route path='/search' render={() => (
+            <SearchPage
+              booksInShelf={this.state.booksInShelf}
+              handleShelfChange={this.handleShelfChange}
+              loading={this.state.loading}
+            />
+          )} />
+          <Route exact path='/' render={() => (
+            <LibraryPage 
+              booksInShelf={this.state.booksInShelf}
+              handleShelfChange={this.handleShelfChange}
+              loading={this.state.loading}
+            />
+          )} />
+        </div>
+      </BrowserRouter>
     );
   }
 }
