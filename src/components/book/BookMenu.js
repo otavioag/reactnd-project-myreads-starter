@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const BookMenu = (props) => (
   <div className='book-shelf-changer'>
-    <select value={props.shelf} onChange={(e) => {
+    <select aria-label='Select shelf' value={props.shelf} onChange={(e) => {
       e.preventDefault();
       props.handleShelfChange(props.book, e.target.value);
     }}>

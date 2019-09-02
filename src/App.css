@@ -148,7 +148,7 @@ button:active {
 
 .book-title,
 .book-authors {
-  font-size: 0.8em;
+  font-size: 0.9em;
 }
 
 .book-title {
@@ -156,7 +156,8 @@ button:active {
 }
 
 .book-authors {
-  color: #999;
+  font-style: italic;
+  color: #757575;
 }
 
 .book-top {
