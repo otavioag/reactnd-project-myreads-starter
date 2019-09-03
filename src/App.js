@@ -3,7 +3,8 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { notification } from 'antd';
 import SearchPage from './components/SearchPage';
 import LibraryPage from './components/LibraryPage';
-import * as BooksAPI from './BooksAPI'
+import * as BooksAPI from './BooksAPI';
+import _ from 'lodash';
 import 'antd/dist/antd.css';
 import './App.css';
 
@@ -17,40 +18,21 @@ class BooksApp extends React.Component {
   handleShelfChange = (book, shelf) => {
     this.setState((curState) => ({...curState, loading: true}), () => {
       BooksAPI.update(book, shelf).then(() => {
-        let books = this.state.booksInShelf;
-        const index = books.findIndex(e => e.id === book.id);
-        if (index === -1) {
-          book.shelf = shelf;
-          books = [...books, book];
-        } else {
-          books[index].shelf = shelf;
-        }
-        this.setState((curState) => ({...curState, loading:false, booksInShelf: books}));
+        book.shelf = shelf;
+        const books = this.state.booksInShelf.filter(b => b.id !== book.id).concat(book);
+        this.setState((curState) => ({...curState, loading: false, booksInShelf: books}));
         this.showNotification(book.title, shelf);
       });
     });
   };
 
   showNotification = (title, shelf) => {
-    if (shelf === 'none') {
-      notification.open({message: title + ' removed from library', style: {top: 55}});
-    } else {
-      let sh;
-      switch (shelf) {
-        case 'currentlyReading':
-          sh = 'Currently Reading';
-          break;
-        case 'wantToRead':
-          sh = 'Want to Read';
-          break;
-        case 'read':
-          sh = 'Read';
-          break;
-        default:
-          break;
-      }
-      notification.open({message: title + ' moved to ' + sh, style: {top: 55}});
-    }
+    const msg = (shelf === 'none') ? ' removed from library' : ' moved to ' + _.startCase(shelf);
+
+    notification.open({
+      message: title + msg,
+      style: { top: 55 },
+    });
   };
 
   componentDidMount() {
