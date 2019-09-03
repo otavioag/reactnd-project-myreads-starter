@@ -14,39 +14,31 @@ class SearchPage extends Component {
 
   handleSearchInputChange = (event) => {
     const q = event.target.value;
-    //this callback aproach solves setState race problems:
-    //  example:
-    //  user types 'a' but before the results for 'a' are shown the user deletes the 'a'
-    //  leaving the search field empty, which will update and show zero books, then 
-    //  because it takes more time, the result for 'a' is displayed even with an empty search field.
-    this.setState((curState) => ({...curState, searching: true, query: q, books: []}), () => {
+    this.setState((curState) => ({...curState, searching: q !== '', query: q, books: []}), () => {
       if (q !== '') {
         BooksAPI.search(q).then((books) => {
-          if (Array.isArray(books)) {
-            this.setState((curState) => {
-              if (curState.query === q) {
-                return {...curState, searching: false, books: books};
-              } else {
-                return curState;
-              }
-            });
-          } else {
-            this.setState((curState) => {
-              if (curState.query === q) {
-                return {...curState, searching: false, books: []};
-              } else {
-                return curState;
-              }
-            });
-          }
-        });
-      } else {
-        this.setState((curState) => {
-          if (curState.query === q) {
-            return {...curState, searching: false, books: []};
-          } else {
-            return curState;
-          }
+          this.setState((curState) => {
+            if (curState.query === q) {
+              return {
+                ...curState,
+                searching: false,
+                books: Array.isArray(books)
+                    ? books.map((book) => {
+                      const bk = this.props.booksInShelf.find(b => b.id === book.id);
+                      return (
+                        <Book
+                          key={book.id}
+                          book={bk ? bk : book}
+                          handleShelfChange={this.props.handleShelfChange}
+                        />
+                      );
+                    })
+                    : []
+              };
+            } else {
+              return curState;
+            }
+          });
         });
       }
     });
@@ -78,16 +70,7 @@ class SearchPage extends Component {
           </div>
           <div className='search-books-results'>
             <ol className='books-grid'>
-              {this.state.books.map((book) => {
-                const bk = this.props.booksInShelf.find(b => b.id === book.id);
-                return (
-                  <Book
-                    key={book.id}
-                    book={bk ? bk : book}
-                    handleShelfChange={this.props.handleShelfChange}
-                  />
-                );
-              })}
+              {this.state.books}
             </ol>
           </div>
         </div>
